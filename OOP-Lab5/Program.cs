@@ -1,39 +1,10 @@
 ﻿using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
-using System.Numerics;
 using System.Text.Json;
-using System.Xml.Linq;
 
 namespace OOP_Lab5;
 
 public class Program
 {
-	static T? GetInput<T>(string name, Predicate<T> condition) where T : IParsable<T>
-	{
-		T? res;
-		string? input;
-		do
-		{
-			Console.Write($"Enter {name}: ");
-			input = Console.ReadLine();
-		} while (!T.TryParse(input, null, out res) || !condition(res));
-		return res;
-	}
-
-	static T? GetNonNegativeInput<T>(string name) where T : INumber<T>
-		=> GetInput<T>(name, res => res >= T.Zero);
-
-	static string GetStringInput(string name, Predicate<string> condition)
-	{
-		string res;
-		do
-		{
-			Console.Write($"Enter {name}: ");
-			res = Console.ReadLine()!;
-		} while (!condition(res));
-		return res;
-	}
-
 	const string DataDirectory = @"D:\Sources\University\2 course\OOP\OOP-Lab5\Data";
 
 	static readonly Dictionary<string, IEnumerable<Tax>> dataCollection = new();
@@ -64,17 +35,17 @@ public class Program
 
 	static void Create()
 	{
-		string name = GetStringInput("name", s => !string.IsNullOrEmpty(s));
+		string name = InputHelper.GetStringInput("name", s => !string.IsNullOrEmpty(s));
 
 		var data = new TaxpayerData(
-			MainJobIncome: GetNonNegativeInput<double>("main job income"),
-			AdditionalJobIncome: GetNonNegativeInput<double>("additional job income"),
-			AuthorAwardsAmount: GetNonNegativeInput<double>("author awards amount"),
-			GoodsSellsIncome: GetNonNegativeInput<double>("goods sells income"),
-			MoneyGiftsAmount: GetNonNegativeInput<double>("money gifts amount"),
-			GoodsGiftsAmount: GetNonNegativeInput<double>("goods gifts amount"),
-			AbroadTransfersAmount: GetNonNegativeInput<double>("abroad transfers amount"),
-			ChildrenCount: GetNonNegativeInput<int>("children count")
+			MainJobIncome: InputHelper.GetNonNegativeInput<double>("main job income"),
+			AdditionalJobIncome: InputHelper.GetNonNegativeInput<double>("additional job income"),
+			AuthorAwardsAmount: InputHelper.GetNonNegativeInput<double>("author awards amount"),
+			GoodsSellsIncome: InputHelper.GetNonNegativeInput<double>("goods sells income"),
+			MoneyGiftsAmount: InputHelper.GetNonNegativeInput<double>("money gifts amount"),
+			GoodsGiftsAmount: InputHelper.GetNonNegativeInput<double>("goods gifts amount"),
+			AbroadTransfersAmount: InputHelper.GetNonNegativeInput<double>("abroad transfers amount"),
+			ChildrenCount: InputHelper.GetNonNegativeInput<int>("children count")
 		);
 
 		var taxes = new Tax[]
@@ -162,7 +133,7 @@ public class Program
 			}
 			Console.WriteLine();
 
-			char choice = GetInput<char>("your choice", actions.ContainsKey);
+			char choice = InputHelper.GetInput<char>("your choice", actions.ContainsKey);
 			Console.WriteLine();
 
 			actions[choice].Action();
