@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Text.Json;
+﻿using System.Text.Json;
 
 namespace OOP_Lab5;
 
@@ -83,8 +82,7 @@ public class Program
 
 		if (!dataCollection.ContainsKey(name))
 		{
-			Console.WriteLine("There is no data associated with this name");
-			return;
+			throw new DataNotFoundException();
 		}
 
 		string directoryPath = Path.Combine(DataDirectory, $"{name}");
@@ -96,8 +94,6 @@ public class Program
 			using var s = File.Create(filePath);
 			JsonSerializer.Serialize(s, tax, new JsonSerializerOptions() { WriteIndented = true });
 		}
-
-		Process.Start("explorer.exe", directoryPath);
 	}
 
 	static void Read()
@@ -108,8 +104,7 @@ public class Program
 		string directoryPath = Path.Combine(DataDirectory, name);
 		if (!Directory.Exists(directoryPath))
 		{
-			Console.WriteLine("There is no data directory with this name");
-			return;
+			throw new DataNotFoundException();
 		}
 
 		var taxes = new List<Tax>();
@@ -136,7 +131,14 @@ public class Program
 			char choice = InputHelper.GetInput<char>("your choice", actions.ContainsKey);
 			Console.WriteLine();
 
-			actions[choice].Action();
+			try
+			{
+				actions[choice].Action();
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(ex.Message);
+			}
 
 			Console.WriteLine();
 			Console.Write("Press enter to continue...");

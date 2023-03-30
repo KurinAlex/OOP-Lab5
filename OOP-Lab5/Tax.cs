@@ -13,6 +13,10 @@ public abstract class Tax
 
 	public Tax(TaxpayerData taxpayerData)
 	{
+		if (Percent < 0.0)
+		{
+			throw new NegativePercentExcpetion();
+		}
 		double taxedAmount = GetTaxedAmount(taxpayerData);
 		Amount = Math.Max(0.0, taxedAmount * Percent / 100.0);
 	}
